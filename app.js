@@ -13,18 +13,18 @@ const io = new Server(http);
 const port = process.env.PORT || 3000;
 
 io.on('connection', (socket) => {
-  console.log('a user connected', socket.id);
-
-  socket.on('disconnect', () => {
-    console.log('a user disconnected', socket.id);
+    console.log('a user connected', socket.id);
+  
+    socket.on('disconnect', () => {
+      console.log('a user disconnected', socket.id);
+    });
+  
+    socket.on('chat message', (usr, msg) => {
+      console.log('message:',usr, msg);
+      io.emit('chat message', `${usr} says ${msg}`);
+    });
   });
-
-  socket.on('chat message', (msg) => {
-    console.log('message:', msg);
-    io.emit('chat message', msg);
-  });
-});
-
+  
 http.listen(port, () => {
   console.log(`Socket.io chat app listening on port ${port}!`);
 });
