@@ -2,20 +2,42 @@
 
 const socket = io();
 const channel = 'chat message';
+const roomChannel = 'change room';
+const roomSelector = document.getElementById('rooms');
 
-document.querySelector('form').addEventListener('submit', (event) => {
-  event.preventDefault();
-  const inp = document.getElementById('m');
-  const user = document.getElementById('u');
-  socket.emit(channel, user.value, inp.value);
-  inp.value = '';
-});
+const changeRoom = (room) => {
+  socket.emit(roomChannel, room);
+};
 
-socket.on(channel, (msg) => {
+const addMessage = (msg) => {
   const item = document.createElement('li');
   item.innerHTML = msg;
-  console.log(msg)
   const list = document.getElementById('messages');
   list.appendChild(item);
   list.scrollTop = list.scrollHeight;
+};
+
+document.getElementById('messageForm').addEventListener('submit', (event) => {
+  event.preventDefault();
+  const user = document.getElementById('user');
+  const inp = document.getElementById('message');
+  socket.emit(channel, user.value, inp.value, roomSelector.value);
+  inp.value = '';
 });
+
+document.getElementById('roomsForm').addEventListener('submit', (event) => {
+  event.preventDefault();
+  changeRoom(roomSelector.value);
+});
+
+socket.on(channel, (user, msg) => {
+  addMessage(`${user} says ${msg}`);
+});
+
+socket.on(roomChannel, (room) => {
+  if (room) {
+    addMessage(`You joined room: ${room}`);
+  }
+});
+
+changeRoom(roomSelector.value);
