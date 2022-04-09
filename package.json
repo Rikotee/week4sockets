@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Teemu Rekola",
   "license": "GPL-3.0",
   "dependencies": {
     "dotenv": "^16.0.0",
